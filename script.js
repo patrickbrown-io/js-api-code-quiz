@@ -13,17 +13,17 @@
 
 // WHEN the game is over
 // THEN I can save my initials and my score
-
-
 ///////////////////My variables//////////////////////////////////////////////////////////////
 var score = 0;
-var question = document.querySelector(".question");
 //buttons
 const startBtn = document.querySelector("#start-button");
 //containers
 const questionContainer = document.querySelector("#question-container");
+const questionElement = document.getElementById('question');
+const answerButtons = document.getElementById('answer-buttons')
 
-
+let shuffledQuestions;
+let currentQuestionIndex;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 startBtn.addEventListener("click", function() {
     startGame();
@@ -36,13 +36,27 @@ function startGame(){
     console.log('Started');
     //question container is visible
     questionContainer.setAttribute("class","show");
+    //hide the start button
     startBtn.setAttribute("class","hide");
+    currentQuestionIndex = 0
+
+    //timer starts
+
+    //choose a question
+    shuffledQuestions = questions.sort(() => Math.random() - .5)
+      setNextQuestion();
 }
+
+
+
 //assigns the user a question
-function writeQuestion(){
-
+function setNextQuestion(){
+showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
+function showQuestion(question){
+questionElement.innerText = question.question;
+}
     //timer starts
 
     //question is selected
