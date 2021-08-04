@@ -17,14 +17,19 @@ var score = 0;
 //buttons
 const startBtn = document.querySelector("#start-button");
 const nextBtn =document.querySelector("#next-button")
+
+const submitButton = document.getElementById("submit-score")
+const scoreButton = document.getElementById("high-scores")
 //containers
 const questionContainer = document.querySelector("#question-container");
 const questionElement = document.getElementById('question');
 const answerButtons = document.getElementById('answer-buttons')
 
 const hudContainer = document.getElementById('#hud-message');
-const timerDisplay = document.querySelector("#timer");
-const scoreCard = document.getElementById('#game-over');
+const scoreCard = document.getElementById('game-over');
+
+var timeLeft;
+var timerDisplay = document.querySelector("#timer");
 
 let shuffledQuestions;
 let currentQuestionIndex;
@@ -33,10 +38,23 @@ startBtn.addEventListener("click", function() {
     startGame();
 });
 
+function countdown(){
+  var timeLeft = 30;
+  var timeInverval = setInterval(function(){
+    if (timeLeft <1){
+      gameOver()
+    } else {
+      timerDisplay.textContent = "Seconds left: " +timeLeft;
+             timeLeft--;
+    }
+  }, 1000)
+}
+
 ///Start the game by clicking a button
     // when startButton is clicked, hide start button, unhide question
 function startGame(){
   //logs to test
+    countdown();
     console.log('Started');
     //question container is visible
     questionContainer.setAttribute("class","show");
@@ -49,13 +67,13 @@ function startGame(){
     //choose a question
     shuffledQuestions = questions.sort(() => Math.random() - .5)
     setNextQuestion();
-
 }
 
 //assigns the user a question
 function setNextQuestion(){
 
 resetState();
+//game over condition, if exceeds question count
 if(currentQuestionIndex>4){
   gameOver();
 }
@@ -70,7 +88,6 @@ function resetState(){
   }
 }
 
-
 function showQuestion(question){
 //creates question header
 questionElement.innerText = question.question;
@@ -79,6 +96,7 @@ question.answers.forEach(answer => {
   const button = document.createElement('button')
   button.innerText = answer.text;
   button.classList.add('btn')
+
 //check if answer is correct
   if (answer.correct){
     button.dataset.correct = answer.correct;
@@ -117,10 +135,14 @@ element.classList.remove('correct')
 element.classList.remove('wrong');
 }
 
-
+gameOverBlade  = document.getElementById("game-over");
 function gameOver() {
-questionElement.innerText = "GAME OVER"
+  resetState();
+timerDisplay.classList.add("hide");
+questionElement.innerText = "GAME OVER";
 scoreCard.classList.remove("hide");
+submitButton.classList.remove("hide");
+scoreButton.classList.remove("hide");
 }
 
 /////MY QUESTIONS
