@@ -1,4 +1,3 @@
-
 // WHEN I click the start button
 // THEN a timer starts and I am presented with a question
 
@@ -17,10 +16,15 @@
 var score = 0;
 //buttons
 const startBtn = document.querySelector("#start-button");
+const nextBtn =document.querySelector("#next-button")
 //containers
 const questionContainer = document.querySelector("#question-container");
 const questionElement = document.getElementById('question');
 const answerButtons = document.getElementById('answer-buttons')
+
+const hudContainer = document.getElementById('#hud-message');
+const timerDisplay = document.querySelector("#timer");
+const scoreCard = document.getElementById('#game-over');
 
 let shuffledQuestions;
 let currentQuestionIndex;
@@ -44,36 +48,80 @@ function startGame(){
 
     //choose a question
     shuffledQuestions = questions.sort(() => Math.random() - .5)
-      setNextQuestion();
+    setNextQuestion();
+
 }
-
-
 
 //assigns the user a question
 function setNextQuestion(){
+
+resetState();
+if(currentQuestionIndex>4){
+  gameOver();
+}
 showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
-function showQuestion(question){
-questionElement.innerText = question.question;
+//reset answers
+function resetState(){
+
+  while(answerButtons.firstChild){
+    answerButtons.removeChild(answerButtons.firstChild);
+  }
 }
-    //timer starts
-
-    //question is selected
-
-    //user select an answer
-        //let user know if they got it right or wrong
-        //if wrong, subtract time
 
 
-//After answering a question
-    //Present an additional question
+function showQuestion(question){
+//creates question header
+questionElement.innerText = question.question;
+//creates buttons out of the possible answers
+question.answers.forEach(answer => {
+  const button = document.createElement('button')
+  button.innerText = answer.text;
+  button.classList.add('btn')
+//check if answer is correct
+  if (answer.correct){
+    button.dataset.correct = answer.correct;
+  }
 
-//user can select between 4 answers: one is right, 3 are wrong
+  button.addEventListener('click',selectAnswer)
+  answerButtons.appendChild(button);
+} )
+}
 
-//Setting our next questions
+function selectAnswer(event){
+  const selectedButton = event.target;
+  const correct = selectedButton.dataset.correct
+  setStatusClass(document.body, correct)
+    Array.from(answerButtons.children).forEach(button => {
+      setStatusClass(button,button.dataset.correct)
+      })
+      if(correct){
+    alert("Correct!")
+    currentQuestionIndex++;
+    setNextQuestion();
+      }
+}
+
+function setStatusClass(element, correct){
+  clearStatusClass(element);
+  if(correct) {
+    element.classList.add('correct')
+  } else {
+    element.classList.add('wrong')
+  }
+}
+
+function clearStatusClass(element){
+element.classList.remove('correct')
+element.classList.remove('wrong');
+}
 
 
+function gameOver() {
+questionElement.innerText = "GAME OVER"
+scoreCard.classList.remove("hide");
+}
 
 /////MY QUESTIONS
 const questions = [

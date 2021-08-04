@@ -1,7 +1,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
@@ -44,14 +44,6 @@ body {
   border-color: black;
 }
 
-.btn-correct {
-  background-color: green;
-}
-
-.btn-wrong {
-  background-color: red;
-}
-
 .start-btn,
 .next-btn {
   font-weight: bold;
@@ -67,4 +59,12 @@ body {
 
 .hide {
   display: none;
+}
+
+body.wrong {
+  background-color: red;
+}
+
+body.correct {
+  background-color: green;
 }
