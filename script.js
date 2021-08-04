@@ -122,15 +122,15 @@ function selectAnswer(event){
   setStatusClass(document.body, correct)
     Array.from(answerButtons.children).forEach(button => {
       setStatusClass(button,button.dataset.correct)
-      })
+      }) //IF THE USER CHOSES THE CORRECT ANSWER
       if(correct){
         document.body.classList.add('correct')
         userScore= userScore+10;
-        console.log(userScore);
-    alert("Correct!")
-    currentQuestionIndex++;
-    setNextQuestion();
-      } else {
+        alert("Correct!")
+        currentQuestionIndex++;
+        setNextQuestion();
+
+      } else { ///WRONG ANSWER
       userScore=userScore - 5;
       console.log(userScore)
       timeLeft = timeLeft - 3;
