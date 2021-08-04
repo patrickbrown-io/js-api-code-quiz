@@ -16,16 +16,17 @@
 var score = 0;
 //buttons
 const startBtn = document.querySelector("#start-button");
-const nextBtn =document.querySelector("#next-button")
+const playAgainButton =document.querySelector("#play-again")
 
 const submitButton = document.getElementById("submit-score")
 const scoreButton = document.getElementById("high-scores")
 //containers
 const questionContainer = document.querySelector("#question-container");
 const questionElement = document.getElementById('question');
-const answerButtons = document.getElementById('answer-buttons')
+const answerButtons = document.getElementById('answer-buttons');
+const welcomeMessage = document.getElementById('welcome-message');
 
-const hudContainer = document.getElementById('#hud-message');
+const hudContainer = document.getElementById('hud-message');
 const scoreCard = document.getElementById('game-over');
 
 var timeLeft;
@@ -34,12 +35,14 @@ var timerDisplay = document.querySelector("#timer");
 let shuffledQuestions;
 let currentQuestionIndex;
 ///////////////////////////////////////////////////////////////////////////////////////////////
+welcomeMessage.innerText = ("Welcome to my Javascript Code Quiz" + "\n" + "You will have 30 seconds to answer Questions" + "\n" + "Incorrect Answers will result in a -3 second penalty and -5 to your score")
+
 startBtn.addEventListener("click", function() {
     startGame();
 });
 
 function countdown(){
-  var timeLeft = 30;
+  timeLeft = 30;
   var timeInverval = setInterval(function(){
     if (timeLeft <1){
       gameOver()
@@ -50,12 +53,16 @@ function countdown(){
   }, 1000)
 }
 
+
+
+
 ///Start the game by clicking a button
     // when startButton is clicked, hide start button, unhide question
 function startGame(){
   //logs to test
+    welcomeMessage.setAttribute("class","hide");
     countdown();
-    console.log('Started');
+    // console.log('Started');
     //question container is visible
     questionContainer.setAttribute("class","show");
     //hide the start button
@@ -73,8 +80,10 @@ function startGame(){
 function setNextQuestion(){
 
 resetState();
+document.body.classList.remove('correct')
 //game over condition, if exceeds question count
-if(currentQuestionIndex>4){
+if(currentQuestionIndex>5){
+  resetState();
   gameOver();
 }
 showQuestion(shuffledQuestions[currentQuestionIndex])
@@ -82,7 +91,7 @@ showQuestion(shuffledQuestions[currentQuestionIndex])
 
 //reset answers
 function resetState(){
-
+  hudContainer.innerText ="";
   while(answerButtons.firstChild){
     answerButtons.removeChild(answerButtons.firstChild);
   }
@@ -115,11 +124,18 @@ function selectAnswer(event){
       setStatusClass(button,button.dataset.correct)
       })
       if(correct){
+        document.body.classList.add('correct')
+        userScore= userScore+10;
+        console.log(userScore);
     alert("Correct!")
     currentQuestionIndex++;
     setNextQuestion();
-      }
-}
+      } else {
+      userScore=userScore - 5;
+      console.log(userScore)
+      timeLeft = timeLeft - 3;
+      hudContainer.innerText = "INCORRECT, -3 seconds";
+}}
 
 function setStatusClass(element, correct){
   clearStatusClass(element);
@@ -139,11 +155,32 @@ gameOverBlade  = document.getElementById("game-over");
 function gameOver() {
   resetState();
 timerDisplay.classList.add("hide");
-questionElement.innerText = "GAME OVER";
+questionElement.innerText = "GAME OVER --Your Score is: "+userScore;
 scoreCard.classList.remove("hide");
 submitButton.classList.remove("hide");
 scoreButton.classList.remove("hide");
+playAgainButton.classList.remove("hide");
 }
+
+var initials;
+var userScore=0;
+
+submitButton.addEventListener("click", function() {
+   intials = prompt("Please submit your initials")
+   localStorage.setItem("initials",intials);
+   localStorage.setItem("score", userScore);
+});
+
+const scoreInitials= localStorage.getItem("initials")
+const scoreScore= localStorage.getItem("score");
+
+scoreButton.addEventListener("click", function() {
+alert("Initials: " + scoreInitials + "     Score: " + scoreScore)
+});
+
+playAgainButton.addEventListener("click", function() {
+window.location.reload();
+});
 
 /////MY QUESTIONS
 const questions = [
